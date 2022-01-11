@@ -1,0 +1,112 @@
+esphome:
+  name: jimmy-display
+  platform: esp32
+  board: lolin32
+  on_boot:
+    then:
+       - uart.write: "SHello Smelly"
+       - uart.write: "STry again smelly"
+
+substitutions:
+ <<: !include ./jimmy-display/jimmy_display_secrets.yaml
+  
+#captive_portal:
+
+# Enable logging
+logger:
+  level: VERBOSE
+  
+ota:
+  password: ${ota_pass}
+
+  
+wifi:
+  ssid: espota
+  password: ${wifi_pass}
+  fast_connect: True
+  power_save_mode: none
+  manual_ip:
+    static_ip: 192.168.20.31
+    gateway: 192.168.20.1
+    subnet: 255.255.255.192
+    dns1: 209.244.0.3
+    dns2: 192.168.10.60
+
+#Setup the mqtt bus
+mqtt:
+  broker: 192.168.10.148
+  port: 1883
+  username: info_disp
+  password: ${mqtt_pass}
+
+time:
+  - platform: sntp
+    id: clocky
+    servers: 50.208.57.188
+    timezone: America/Los_Angeles
+
+spi:
+  clk_pin: GPIO21
+  mosi_pin: GPIO22
+
+font:
+  - file: "arial.ttf"
+    id: font1
+    size: 28
+  - file: "arial.ttf"
+    id: font2
+    size: 12
+  - file: "arial.ttf"
+    id: font3
+    size: 20
+  - file: "arial.ttf"
+    id: font4
+    size: 10
+
+uart:
+  tx_pin: GPIO3
+  rx_pin: GPIO1
+  baud_rate: 9600
+  data_bits: 8
+  parity: NONE
+  stop_bits: 1
+  id: tts
+
+
+
+#Alert Trigger switch
+switch:
+  - platform: gpio
+    pin: GPIO13 #Pin is a holding place, does nothing if you need it
+    id: alert_pin
+    name: "Jimmy Alert"
+    on_turn_on:
+    - display.page.show: page2
+    - uart.write: "SHello World"
+    - delay: 7s
+    - switch.turn_off: alert_pin
+    on_turn_off:
+    - display.page.show: page1
+
+interval:
+  - interval: 15s
+    then:
+      - display.page.show_next: lcd
+      - component.update: lcd
+      
+#Main Display Code
+display:
+  - platform: ssd1322_spi
+    model: "SSD1322 256x64"
+    id: lcd
+    reset_pin: GPIO23
+    cs_pin: GPIO18
+    dc_pin: GPIO4
+    brightness: 1%
+    pages:
+      - id: page1
+        lambda: |-
+          it.strftime(55, 23, id(font1), "%A %H:%M ", id(clocky).now());
+      - id: page2
+        lambda: |-
+          it.print(55, 23, id(font1),"Audio Message Here");
