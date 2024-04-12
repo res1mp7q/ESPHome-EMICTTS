@@ -3,7 +3,7 @@ ESPHome EMIC Text to Speech Module
 The inspiration for this was this scene from Back to the Future II ( https://youtu.be/Z2OLmFw9wR8?si=AEyfZgfXBqFM3eei&t=189 )
 
 
-[<img src="https://fast.wistia.com/embed/medias/366u7xpk12/swatch" width="600" height="300"
+[<img src="20240412_110157.JPG" width="600" height="300"
 />](https://excelsiorltd.wistia.com/medias/366u7xpk12)
 
 
@@ -47,7 +47,7 @@ Usage
 !include emic_text_to_speech.yaml
 
 
-![TALKY](20240412_110157.JPG)
+
 
 
 For more information on configuring ESPHome and using the EMIC Text to Speech module, refer to the ESPHome documentation.
