@@ -2,7 +2,7 @@ ESPHome EMIC Text to Speech Module
 
 The inspiration for this was this scene from Back to the Future II ( https://youtu.be/Z2OLmFw9wR8?si=AEyfZgfXBqFM3eei&t=189 )
 
-![TALKY IN ACTION](20240412_110751.mp4)
+[![Talky in action] (20240412_110157.JPG) (https://excelsiorltd.wistia.com/medias/366u7xpk12)
 
 This is an ESPHome YAML configuration for integrating the EMIC Text to Speech module with your ESPHome project. Used in conjuction with Home Assistant and MQTT, was able to have the EMIC yelp out ridiculous statements to remind people how nerds live. 
 
