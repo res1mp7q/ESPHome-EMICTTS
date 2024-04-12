@@ -1,42 +1,43 @@
 esphome:
-  name: jimmy-display
-  platform: esp32
+  name: talky
+  platform: ESP32
   board: lolin32
   on_boot:
     then:
-       - uart.write: "SHello Smelly"
-       - uart.write: "STry again smelly"
+       - delay: 20s
+       - uart.write: "\r\nSback to the future!\r\n"
 
+       
 substitutions:
- <<: !include ./jimmy-display/jimmy_display_secrets.yaml
+ <<: !include ./talky/talky-secrets.yaml
   
 #captive_portal:
 
 # Enable logging
-logger:
-  level: VERBOSE
+#logger:
+# hardware_uart: UART1
+# level: VERY_VERBOSE
   
 ota:
   password: ${ota_pass}
 
-  
 wifi:
   ssid: espota
   password: ${wifi_pass}
   fast_connect: True
   power_save_mode: none
   manual_ip:
-    static_ip: 192.168.20.31
-    gateway: 192.168.20.1
-    subnet: 255.255.255.192
-    dns1: 209.244.0.3
-    dns2: 192.168.10.60
+    static_ip: 
+    gateway: 
+    subnet: 
+    dns1: 
+    dns2: 
 
 #Setup the mqtt bus
 mqtt:
-  broker: 192.168.10.148
+  broker: 
   port: 1883
-  username: info_disp
+  username: 
   password: ${mqtt_pass}
 
 time:
@@ -45,68 +46,52 @@ time:
     servers: 50.208.57.188
     timezone: America/Los_Angeles
 
-spi:
-  clk_pin: GPIO21
-  mosi_pin: GPIO22
-
-font:
-  - file: "arial.ttf"
-    id: font1
-    size: 28
-  - file: "arial.ttf"
-    id: font2
-    size: 12
-  - file: "arial.ttf"
-    id: font3
-    size: 20
-  - file: "arial.ttf"
-    id: font4
-    size: 10
-
 uart:
-  tx_pin: GPIO3
-  rx_pin: GPIO1
+  tx_pin: GPIO1
+  rx_pin: GPIO3
   baud_rate: 9600
   data_bits: 8
   parity: NONE
   stop_bits: 1
   id: tts
 
-
-
-#Alert Trigger switch
 switch:
   - platform: gpio
-    pin: GPIO13 #Pin is a holding place, does nothing if you need it
-    id: alert_pin
-    name: "Jimmy Alert"
+    pin: GPIO13
+    id: alert_1_emic
+    name: "King of the castle"
     on_turn_on:
-    - display.page.show: page2
-    - uart.write: "SHello World"
-    - delay: 7s
-    - switch.turn_off: alert_pin
+    - uart.write: "\r\nSWelcome Home Marty, lord of the manor, king of the castle\r\n"
+    - delay: 20s
+    - switch.turn_off: alert_1_emic
     on_turn_off:
-    - display.page.show: page1
+    - uart.write: "\r\nSCLEAR\r\n"
+#  - platform: gpio
+#    pin: GPIO
+#    id: alert_lamp
+#    name: "Talky Alert Lamp"
+#    on_turn_on:
+#    - light.turn_on:
+#        id: notify_lamp
+#        brightness: 100%
+#        red: 100%
+#        green: 100%
+#        blue: 1.0
+#    - delay: 10s
+#    - switch.turn_off: alert_lamp
+#    on_turn_off:
+#    - light.turn_off:
+#       id: notify_lamp
 
-interval:
-  - interval: 15s
-    then:
-      - display.page.show_next: lcd
-      - component.update: lcd
-      
 #Main Display Code
-display:
-  - platform: ssd1322_spi
-    model: "SSD1322 256x64"
-    id: lcd
-    reset_pin: GPIO23
-    cs_pin: GPIO18
-    dc_pin: GPIO4
-    brightness: 1%
-    pages:
-      - id: page1
-        lambda: |-
-          it.strftime(55, 23, id(font1), "%A %H:%M ", id(clocky).now());
-      - id: page2
-        lambda: |-
-          it.print(55, 23, id(font1),"Audio Message Here");
+light:
+  - platform: neopixelbus
+    type: GRB
+    variant: WS2813
+    pin: GPIO17
+    num_leds: 1
+    name: "notify_light"
+    id: notify_lamp
+    default_transition_length: 0s
+    color_correct: [50%, 50%, 50%]
+    restore_mode: ALWAYS_OFF
