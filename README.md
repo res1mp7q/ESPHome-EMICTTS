@@ -1,5 +1,7 @@
 ESPHome EMIC Text to Speech Module
 
+The inspiration for this was this scene from Back to the Future II ( https://youtu.be/Z2OLmFw9wR8?si=AEyfZgfXBqFM3eei&t=189 )
+
 This is an ESPHome YAML configuration for integrating the EMIC Text to Speech module with your ESPHome project. With this configuration, you can easily convert text to speech using the EMIC module, enabling your ESPHome device to speak messages aloud.
 Requirements
 
